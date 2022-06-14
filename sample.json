@@ -1,27 +1,58 @@
 {"subtitles": [
 	{
 		"start": 14000,
+		"end": 14400,
+		"subtitle": "How are you",
+		"font_type": "NanumSquareB.ttf",
+		"font_size": 40,
+		"font_color": [255, 255, 255]
+	},
+	{
+		"start": 14401,
 		"end": 14800,
-		"subtitle": "How are you"
+		"subtitle": "I'm bad",
+		"font_type": "NanumSquareB.ttf",
+		"font_size": 40,
+		"font_color": [255, 255, 255]
 	},
 	{
 		"start": 14801,
 		"end": 15500,
-		"subtitle": "I'm bad"
+		"subtitle": "난 못 들어 잠에",
+		"font_type": "NanumSquareB.ttf",
+		"font_size": 40,
+		"font_color": [255, 255, 255]
 	},
 	{
 		"start": 15501,
-		"end": 16000,
-		"subtitle": "난 못 들어 잠에"
+		"end": 16100,
+		"subtitle": "창문으로 담배",
+		"font_type": "NanumSquareB.ttf",
+		"font_size": 40,
+		"font_color": [255, 255, 255]
 	},
 	{
-		"start": 16001,
+		"start": 16101,
 		"end": 17000,
-		"subtitle": "창문으로 담배"
+		"subtitle": "연기를 내뱉어 밤에",
+		"font_type": "NanumSquareB.ttf",
+		"font_size": 40,
+		"font_color": [255, 255, 255]
 	},
 	{
 		"start": 17001,
-		"end": 17500,
-		"subtitle": "연기를 내뱉어 밤에"
+		"end": 17800,
+		"subtitle": "참 우울해 당시",
+		"font_type": "NanumSquareB.ttf",
+		"font_size": 40,
+		"font_color": [255, 255, 255]
+	},
+	{
+		"start": 17801,
+		"end": 18600,
+		"subtitle": "어젯밤의 nightmare",
+		"font_type": "NanumSquareB.ttf",
+		"font_size": 40,
+		"font_color": [255, 255, 255]
 	}
 ]}
