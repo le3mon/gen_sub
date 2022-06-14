@@ -1,5 +1,8 @@
+from pprint import pformat
 import cv2
 import json
+import numpy as np
+from PIL import ImageFont, ImageDraw, Image
 
 class Subtitle:
     __capture = ''
@@ -18,7 +21,7 @@ class Subtitle:
         height = int(self.__capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
         return (width, height)
     
-    def set_option(self, fourcc, fps, size=None):
+    def set_video_option(self, fourcc, fps, size=None):
         self.__fourcc = cv2.VideoWriter_fourcc(*fourcc)
         self.__fps = fps
         if size is None:
@@ -38,14 +41,19 @@ class Subtitle:
         cur_fps = 0 # 현재 fps
         time = 0 # 현재 영상 시간 100ms 기준
         idx = 0
-
+        font = ImageFont.truetype('fonts/NanumSquareB.ttf', 20) #폰트, 사이즈
+        
         while self.__capture.isOpened():
             status, frame = self.__capture.read()
             if not status: # 프레임을 읽어오지 못할 경우
                 break   
             
             if (self.__subtitles[idx]['start'] <= time and self.__subtitles[idx]['end'] >= time):
-                cv2.putText(frame, self.__subtitles[idx]['subtitle'], (400,400), cv2.FONT_HERSHEY_COMPLEX_SMALL, 5, (255, 255, 255))
+                pframe = Image.fromarray(frame)
+                draw = ImageDraw.Draw(pframe)
+                draw.text((30, 50), "가나다라", font=font, fill=(0, 0, 0))
+                frame = np.array(pframe)
+                # cv2.putText(frame, self.__subtitles[idx]['subtitle'], (400,400), cv2.FONT_HERSHEY_COMPLEX_SMALL, 5, (255, 255, 255))
             
             elif (idx+1 == len(self.__subtitles)):
                 None
