@@ -1,4 +1,3 @@
-from pprint import pformat
 import cv2
 import json
 import numpy as np
@@ -9,64 +8,88 @@ class Subtitle:
     __out = ''
     __fourcc = ''
     __fps = ''
-    __size = ''
+    __size = ()
     __subtitles = {}
-    # def __init__(self):
-    
+
     def video_capture(self, file):
         self.__capture = cv2.VideoCapture(file)
 
-    def __get_size(self):
+    def __set_size(self):
         width = int(self.__capture.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(self.__capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
         return (width, height)
-    
+
     def set_video_option(self, fourcc, fps, size=None):
         self.__fourcc = cv2.VideoWriter_fourcc(*fourcc)
         self.__fps = fps
         if size is None:
-            self.__size = self.__get_size() # None is default size
+            self.__size = self.__set_size() # None is video default size
         else:
-            self.__size = size
+            self.__size = size #size = (width, height)
 
     def video_writer(self, file):
         self.__out = cv2.VideoWriter(file, self.__fourcc, self.__fps, self.__size)
 
-    def set_subtitles(self, file):
+    def load_subtitles(self, file):
         with open(file, 'r', encoding='UTF-8') as data:
             self.__subtitles =  json.load(data)
         self.__subtitles = self.__subtitles['subtitles']
+    
+    def __is_set_time(self, idx, time):
+        if (idx >= len(self.__subtitles)):
+            return False
+
+        if (time >= self.__subtitles[idx]['start'] and time <= self.__subtitles[idx]['end']):
+            return True
+        else:
+            return False
+    
+    def __is_end_time(self, idx, time):
+        if (time == self.__subtitles[idx]['end'] and idx < len(self.__subtitles)):
+            return True
+        else:
+            return False
+
+    def __set_font(self, idx):
+        font_type = self.__subtitles[idx]['font_type']
+        font_size = self.__subtitles[idx]['font_size']
+        return ImageFont.truetype('fonts/'+font_type, font_size) #폰트, 사이즈
+
+    def __set_position(self, frame, t_size):
+        x = (frame.shape[1] - t_size[0]) / 2
+        y = frame.shape[0] - frame.shape[0] / 10
+        return (x,y)
+
+    def __set_subtitle(self, frame, idx):
+        font = self.__set_font(idx)
+        font_color = tuple(self.__subtitles[idx]['font_color'])
+        text = self.__subtitles[idx]['subtitle']
+
+        pframe = Image.fromarray(frame) #cv2 -> pil 형식으로 변환
+        draw = ImageDraw.Draw(pframe) #자막을 넣기 객체 생성
+        position = self.__set_position(frame, draw.textsize(text, font))
+        draw.text(position, text, font=font, fill=font_color) #자막 삽입
+        return np.array(pframe) #다시 cv2로 사용해야 하기 때문에 numpy array 형식으로 반환
 
     def edit(self):
         cur_fps = 0 # 현재 fps
         time = 0 # 현재 영상 시간 100ms 기준
-        idx = 0
-        font = ImageFont.truetype('fonts/NanumSquareB.ttf', 20) #폰트, 사이즈
+        idx = 0 # 딕셔너리 인덱스
         
         while self.__capture.isOpened():
             status, frame = self.__capture.read()
-            if not status: # 프레임을 읽어오지 못할 경우
+            if not status: # 프레임을 읽어오지 못할 경우 종료
                 break   
             
-            if (self.__subtitles[idx]['start'] <= time and self.__subtitles[idx]['end'] >= time):
-                pframe = Image.fromarray(frame)
-                draw = ImageDraw.Draw(pframe)
-                draw.text((30, 50), "가나다라", font=font, fill=(0, 0, 0))
-                frame = np.array(pframe)
-                # cv2.putText(frame, self.__subtitles[idx]['subtitle'], (400,400), cv2.FONT_HERSHEY_COMPLEX_SMALL, 5, (255, 255, 255))
-            
-            elif (idx+1 == len(self.__subtitles)):
-                None
-
-            elif (self.__subtitles[idx+1]['start'] <= time and self.__subtitles[idx+1]['end'] >= time):
-                cv2.putText(frame, self.__subtitles[idx+1]['subtitle'], (400,400), cv2.FONT_HERSHEY_COMPLEX_SMALL, 5, (255, 255, 255))
-                if (idx < len(self.__subtitles)-1):
-                    idx = idx + 1
+            if (self.__is_set_time(idx, time)): #설정된 자막의 시간일 경우 True 반환
+                frame = self.__set_subtitle(frame, idx) 
+                if (self.__is_end_time(idx, time)): #설정중인 자막의 마지막 시간일 때 인덱스 증가 = 다음 자막 입력 진행
+                    idx += 1
             
             # cv2.imshow('vdo', frame) # 따로 창으로 출력
             self.__out.write(frame)
                 
-            cur_fps = cur_fps + 1
+            cur_fps += 1
             time = int(cur_fps / 6) * 100
             
             if cv2.waitKey(1) & 0xFF == ord('q'): # q 누르면 종료
