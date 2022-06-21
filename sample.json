@@ -5,7 +5,8 @@
 		"subtitle": "How are you",
 		"font_type": "NanumSquareB.ttf",
 		"font_size": 40,
-		"font_color": [255, 255, 255]
+		"font_color": [255, 255, 255],
+		"subtitle_xy": [640, 360]
 	},
 	{
 		"start": 14401,
@@ -13,7 +14,8 @@
 		"subtitle": "I'm bad",
 		"font_type": "NanumSquareB.ttf",
 		"font_size": 40,
-		"font_color": [255, 255, 255]
+		"font_color": [255, 255, 255],
+		"subtitle_xy": [640, 360]
 	},
 	{
 		"start": 14801,
@@ -21,7 +23,8 @@
 		"subtitle": "난 못 들어 잠에",
 		"font_type": "NanumSquareB.ttf",
 		"font_size": 40,
-		"font_color": [255, 255, 255]
+		"font_color": [255, 255, 255],
+		"subtitle_xy": [640, 360]
 	},
 	{
 		"start": 15501,
@@ -29,7 +32,8 @@
 		"subtitle": "창문으로 담배",
 		"font_type": "NanumSquareB.ttf",
 		"font_size": 40,
-		"font_color": [255, 255, 255]
+		"font_color": [255, 255, 255],
+		"subtitle_xy": [640, 360]
 	},
 	{
 		"start": 16101,
@@ -37,7 +41,8 @@
 		"subtitle": "연기를 내뱉어 밤에",
 		"font_type": "NanumSquareB.ttf",
 		"font_size": 40,
-		"font_color": [255, 255, 255]
+		"font_color": [255, 255, 255],
+		"subtitle_xy": [640, 360]
 	},
 	{
 		"start": 17001,
@@ -45,7 +50,8 @@
 		"subtitle": "참 우울해 당시",
 		"font_type": "NanumSquareB.ttf",
 		"font_size": 40,
-		"font_color": [255, 255, 255]
+		"font_color": [255, 255, 255],
+		"subtitle_xy": [640, 360]
 	},
 	{
 		"start": 17801,
@@ -53,6 +59,7 @@
 		"subtitle": "어젯밤의 nightmare",
 		"font_type": "NanumSquareB.ttf",
 		"font_size": 40,
-		"font_color": [255, 255, 255]
+		"font_color": [255, 255, 255],
+		"subtitle_xy": [640, 360]
 	}
 ]}
