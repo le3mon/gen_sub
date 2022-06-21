@@ -17,13 +17,16 @@ class Subtitle:
     def __set_size(self):
         width = int(self.__capture.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(self.__capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        
         return (width, height)
 
     def set_video_option(self, fourcc, fps, size=None):
         self.__fourcc = cv2.VideoWriter_fourcc(*fourcc)
         self.__fps = fps
+        
         if size is None:
             self.__size = self.__set_size() # None is video default size
+        
         else:
             self.__size = size #size = (width, height)
 
@@ -41,34 +44,45 @@ class Subtitle:
 
         if (time >= self.__subtitles[idx]['start'] and time <= self.__subtitles[idx]['end']):
             return True
+        
         else:
             return False
     
     def __is_end_time(self, idx, time):
         if (time == self.__subtitles[idx]['end'] and idx < len(self.__subtitles)):
             return True
+        
         else:
             return False
 
     def __set_font(self, idx):
         font_type = self.__subtitles[idx]['font_type']
         font_size = self.__subtitles[idx]['font_size']
+        
         return ImageFont.truetype('fonts/'+font_type, font_size) #폰트, 사이즈
 
-    def __set_position(self, frame, t_size):
-        x = (frame.shape[1] - t_size[0]) / 2
-        y = frame.shape[0] - frame.shape[0] / 10
+    def __set_position(self, frame, t_size, t_xy):
+        if (t_xy or (t_xy == 0 and t_xy == 0)): # x, y 둘 다 0으로 설정 시 기본 위치로 지정
+            x = t_xy[0]
+            y = t_xy[1]
+        
+        else:
+            x = (frame.shape[1] - t_size[0]) / 2
+            y = frame.shape[0] - frame.shape[0] / 10
+        
         return (x,y)
 
     def __set_subtitle(self, frame, idx):
         font = self.__set_font(idx)
         font_color = tuple(self.__subtitles[idx]['font_color'])
         text = self.__subtitles[idx]['subtitle']
+        sub_xy = self.__subtitles[idx]['subtitle_xy']
 
         pframe = Image.fromarray(frame) #cv2 -> pil 형식으로 변환
         draw = ImageDraw.Draw(pframe) #자막을 넣기 객체 생성
-        position = self.__set_position(frame, draw.textsize(text, font))
+        position = self.__set_position(frame, draw.textsize(text, font), sub_xy)
         draw.text(position, text, font=font, fill=font_color) #자막 삽입
+        
         return np.array(pframe) #다시 cv2로 사용해야 하기 때문에 numpy array 형식으로 반환
 
     def edit(self):
