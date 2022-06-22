@@ -101,13 +101,13 @@ class Subtitle:
                 if (self.__is_end_time(idx, time)): #현재 설정중인 자막의 마지막 시간일 경우 인덱스 증가하여 다음 자막 입력 준비
                     idx += 1
             
-            # cv2.imshow('vdo', frame) # (윈도우 이름, frame) 활성화할 경우 편집 과정을 따로 창으로 출력
+            cv2.imshow('vdo', frame) # (윈도우 이름, frame) 활성화할 경우 편집 과정을 따로 창으로 출력
             self.__out.write(frame) # 프레임 작성
                 
             cur_fps += 1 
             time = int(cur_fps / 6) * 100
             
-            if cv2.waitKey(1) & 0xFF == ord('q'): # q 누르면 종료
+            if cv2.waitKey(1) & 0xFF == ord('q'): # 따로 창을 출력할 경우 q 누르면 종료
                 break
 
     def __del__(self):
